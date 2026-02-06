@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DB_HOST = "localhost"
+        DB_HOST = "host.docker.internal"
         DB_USER = "root"
         DB_PASS = "winjit3439"
         DB_NAME = "appdb"
