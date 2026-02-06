@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DB_HOST = "mysql-db"
+        DB_HOST = "localhost"
         DB_USER = "root"
         DB_PASS = "winjit3439"
         DB_NAME = "appdb"
