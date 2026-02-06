@@ -21,7 +21,7 @@ pipeline {
         stage('Deploy Initial DB Script') {
             steps {
                 sh """
-                mysql -h $DB_HOST -u$DB_USER -p$DB_PASS < scripts/01_init.sql
+                mysql --ssl-mode=DISABLED -h $DB_HOST -u$DB_USER -p$DB_PASS < scripts/01_init.sql
                 """
             }
         }
@@ -29,7 +29,7 @@ pipeline {
         stage('Update Stored Procedure') {
             steps {
                 sh """
-                mysql -h $DB_HOST -u$DB_USER -p$DB_PASS < scripts/02_update_sp.sql
+                mysql --ssl-mode=DISABLED -h $DB_HOST -u$DB_USER -p$DB_PASS < scripts/02_update_sp.sql
                 """
             }
         }
@@ -37,7 +37,7 @@ pipeline {
         stage('Take DB Snapshot') {
             steps {
                 sh """
-                mysqldump -h $DB_HOST -u$DB_USER -p$DB_PASS $DB_NAME > $SNAPSHOT
+                mysqldump --ssl-mode=DISABLED-h $DB_HOST -u$DB_USER -p$DB_PASS $DB_NAME > $SNAPSHOT
                 """
             }
         }
@@ -45,7 +45,7 @@ pipeline {
         stage('Deploy DB Script Again') {
             steps {
                 sh """
-                mysql -h $DB_HOST -u$DB_USER -p$DB_PASS < scripts/02_update_sp.sql
+                mysql --ssl-mode=DISABLED-h $DB_HOST -u$DB_USER -p$DB_PASS < scripts/02_update_sp.sql
                 """
             }
         }
@@ -53,7 +53,7 @@ pipeline {
         stage('Verify Stored Procedure Name') {
             steps {
                 sh """
-                mysql -h $DB_HOST -u$DB_USER -p$DB_PASS < verify/check_sp.sql
+                mysql --ssl-mode=DISABLED-h $DB_HOST -u$DB_USER -p$DB_PASS < verify/check_sp.sql
                 """
             }
         }
@@ -61,7 +61,7 @@ pipeline {
         stage('Rollback (Restore Snapshot)') {
             steps {
                 sh """
-                mysql -h $DB_HOST -u$DB_USER -p$DB_PASS $DB_NAME < $SNAPSHOT
+                mysql --ssl-mode=DISABLED-h $DB_HOST -u$DB_USER -p$DB_PASS $DB_NAME < $SNAPSHOT
                 """
             }
         }
@@ -69,7 +69,7 @@ pipeline {
         stage('Verify After Rollback') {
             steps {
                 sh """
-                mysql -h $DB_HOST -u$DB_USER -p$DB_PASS < verify/check_sp.sql
+                mysql --ssl-mode=DISABLED -h $DB_HOST -u$DB_USER -p$DB_PASS < verify/check_sp.sql
                 """
             }
         }
