@@ -58,13 +58,29 @@ pipeline {
             }
         }
 
-        stage('Verify Output After Rollback') {
+        /*stage('Verify Output After Rollback') {
             steps {
                 sh """
                 mysql --ssl=0 -h $DB_HOST -u$DB_USER -p$DB_PASS < verify/check_sp_output.sql
                 """
             }
+        }*/
+        stage('Verify Output After Rollback (Gate)') {
+            steps {
+                sh """
+                RESULT=\$(mysql --ssl=0 -h $DB_HOST -u$DB_USER -p$DB_PASS -N -e "CALL get_user();" $DB_NAME)
+                echo "Stored Procedure Output After Rollback: \$RESULT"
+
+                if [ "\$RESULT" != "Version 1" ]; then
+                    echo "❌ Rollback validation failed!"
+                    exit 1
+                fi
+
+                echo "✅ Rollback validation successful"
+                """
+            }
         }
+
 
     }
 }
