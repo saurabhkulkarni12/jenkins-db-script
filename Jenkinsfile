@@ -25,15 +25,6 @@ pipeline {
                 """
             }
         }
-
-        stage('Update Stored Procedure') {
-            steps {
-                sh """
-                mysql --ssl=0 -h $DB_HOST -u$DB_USER -p$DB_PASS < scripts/02_update_sp.sql
-                """
-            }
-        }
-
         stage('Take DB Snapshot') {
             steps {
                 sh """
@@ -42,7 +33,7 @@ pipeline {
             }
         }
 
-        stage('Deploy DB Script Again') {
+        stage('Update Stored Procedure') {
             steps {
                 sh """
                 mysql --ssl=0 -h $DB_HOST -u$DB_USER -p$DB_PASS < scripts/02_update_sp.sql
