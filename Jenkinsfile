@@ -25,6 +25,15 @@ pipeline {
                 """
             }
         }
+        stage('Verify Output After Initial Deployment') {
+            steps {
+                sh """
+                RESULT=\$(mysql --ssl=0 -h $DB_HOST -u$DB_USER -p$DB_PASS -N -e "CALL get_user();" $DB_NAME)
+                [ "\$RESULT" = "Version 1" ] || exit 1
+                """
+            }
+        }
+
         stage('Take DB Snapshot') {
             steps {
                 sh """
