@@ -28,7 +28,7 @@ pipeline {
         stage('Take DB Snapshot') {
             steps {
                 sh """
-                mysqldump --ssl=0 -h $DB_HOST -u$DB_USER -p$DB_PASS $DB_NAME > $SNAPSHOT
+                mysqldump --ssl=0 --routines --triggers --events -h $DB_HOST -u$DB_USER -p$DB_PASS $DB_NAME > $SNAPSHOT
                 """
             }
         }
