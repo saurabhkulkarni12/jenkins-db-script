@@ -41,13 +41,14 @@ pipeline {
             }
         }
 
-        stage('Verify Stored Procedure Name') {
-            steps {
-                sh """
-                mysql --ssl=0 -h $DB_HOST -u$DB_USER -p$DB_PASS < verify/check_sp.sql
-                """
-            }
-        }
+       stage('Verify Stored Procedure Output (After Update)') {
+           steps {
+               sh """
+               mysql --ssl=0 -h $DB_HOST -u$DB_USER -p$DB_PASS < verify/check_sp_output.sql
+              """
+           }
+       }
+
 
         stage('Rollback (Restore Snapshot)') {
             steps {
@@ -57,12 +58,13 @@ pipeline {
             }
         }
 
-        stage('Verify After Rollback') {
+        stage('Verify Output After Rollback') {
             steps {
                 sh """
-                mysql --ssl=0 -h $DB_HOST -u$DB_USER -p$DB_PASS < verify/check_sp.sql
+                mysql --ssl=0 -h $DB_HOST -u$DB_USER -p$DB_PASS < verify/check_sp_output.sql
                 """
             }
         }
+
     }
 }
